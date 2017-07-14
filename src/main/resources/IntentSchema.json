@@ -1,0 +1,13 @@
+{
+  "intents": [
+    {
+      "intent": "SetlistIntent"
+    },
+    {
+      "intent": "AMAZON.HelpIntent"
+    },
+    {
+      "intent": "AMAZON.StopIntent"
+    }
+  ]
+}

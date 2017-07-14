@@ -1,0 +1,4 @@
+SetlistIntent a setlist
+SetlistIntent today's setlist
+SetlistIntent tell me a setlist
+SetlistIntent give me a setlist
