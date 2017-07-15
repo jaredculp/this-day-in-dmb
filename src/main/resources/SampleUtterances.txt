@@ -1,4 +1,6 @@
-SetlistIntent a setlist
-SetlistIntent today's setlist
-SetlistIntent tell me a setlist
-SetlistIntent give me a setlist
+SetlistIntent a d. m. b. setlist
+SetlistIntent today's d. m. b. setlist
+SetlistIntent tell me a d. m. b. setlist
+SetlistIntent tell me today's d. m. b. setlist
+SetlistIntent give me a d. m. b. setlist
+SetlistIntent give me today's d. m. b. setlist
