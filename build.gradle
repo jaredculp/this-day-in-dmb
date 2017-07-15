@@ -15,6 +15,8 @@ repositories {
 dependencies {
     // amazon
     compile 'com.amazon.alexa:alexa-skills-kit:1.4.0'
+    compile 'com.amazonaws:aws-lambda-java-core:1.1.0'
+    compile 'com.amazonaws:aws-lambda-java-log4j:1.0.0'
 
     // logging
     compile 'org.apache.logging.log4j:log4j-core:2.8.2'
