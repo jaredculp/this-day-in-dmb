@@ -1,6 +1,6 @@
 package com.dreamingtree;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Holds the details of a particular show.
@@ -8,9 +8,9 @@ import java.util.Set;
 final class Show {
     private final String venue;
     private final String url;
-    private final Set<String> setlist;
+    private final List<String> setlist;
 
-    Show(String venue, String url, Set<String> setlist) {
+    Show(String venue, String url, List<String> setlist) {
         this.venue = venue;
         this.url = url;
         this.setlist = setlist;
@@ -24,7 +24,7 @@ final class Show {
         return url;
     }
 
-    Set<String> getSetlist() {
+    List<String> getSetlist() {
         return setlist;
     }
 }

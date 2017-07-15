@@ -18,7 +18,7 @@ import retrofit2.Retrofit;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 
 import static java.util.stream.Collectors.joining;
 
@@ -72,7 +72,7 @@ final class ThisDayInDmbSpeechlet implements Speechlet {
                     throw new SpeechletException("Could not retrieve setlist");
                 }
 
-                final Set<String> setlist = show.getSetlist();
+                final List<String> setlist = show.getSetlist();
 
                 speech = new PlainTextOutputSpeech();
                 speech.setText("On this day Dave Matthews Band played in... " + show.getVenue() + " " +

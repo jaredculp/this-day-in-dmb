@@ -6,10 +6,10 @@ import org.jsoup.nodes.Element;
 import retrofit2.Response;
 
 import java.io.IOException;
-import java.util.Set;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Provides a {@link Show} for the current day in history.
@@ -66,11 +66,11 @@ final class ShowSupplier {
             throw new IOException("Could not retrieve setlist for show");
         }
 
-        final Set<String> setlist = Jsoup.parse(showRes.body().string())
+        final List<String> setlist = Jsoup.parse(showRes.body().string())
                 .select("a.lightorange")
                 .stream()
                 .map(Element::text)
-                .collect(toSet());
+                .collect(toList());
 
         return new Show(venue, show.substring(2, show.length()), setlist);
     }
