@@ -81,7 +81,7 @@ final class ThisDayInDmbSpeechlet implements Speechlet {
 
                 final SimpleCard simpleCard = new SimpleCard();
                 simpleCard.setTitle(LocalDate.now().toString() + show.getVenue());
-                final String content = BASE_URL + show.getUrl() + "\n\n\n" + setlist.stream().collect(joining("\n"));
+                final String content = BASE_URL + "/" + show.getUrl() + "\n\n\n" + setlist.stream().collect(joining("\n"));
                 simpleCard.setContent(content);
 
                 return SpeechletResponse.newTellResponse(speech, simpleCard);
