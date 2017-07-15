@@ -1,20 +1,12 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '2.0.1'
+    id 'java'
+}
+
 group 'com.dreamingtree'
 version '1.0-SNAPSHOT'
 
-apply plugin: 'java'
-
 sourceCompatibility = 1.8
-
-task fatJar(type: Jar) {
-    manifest {
-        attributes 'Implementation-Title': 'this-day-in-dmb',
-                'Implementation-Version': version,
-                'Main-Class': 'Handler'
-    }
-    baseName = project.name + '-all'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
-}
 
 repositories {
     mavenCentral()
@@ -22,21 +14,19 @@ repositories {
 
 dependencies {
     // amazon
-    compile 'com.amazon.alexa:alexa-skills-kit:1.1.2'
-    compile 'com.amazonaws:aws-lambda-java-core:1.0.0'
-    compile 'com.amazonaws:aws-lambda-java-log4j:1.0.0'
+    compile 'com.amazon.alexa:alexa-skills-kit:1.4.0'
 
     // logging
-    compile 'log4j:log4j:1.2.17'
-    compile 'org.slf4j:slf4j-api:1.7.0'
-    compile 'org.slf4j:slf4j-log4j12:1.7.0'
+    compile 'org.apache.logging.log4j:log4j-core:2.8.2'
+    compile 'org.slf4j:slf4j-api:1.7.25'
+    compile 'org.slf4j:slf4j-log4j12:1.7.25'
 
     // transitive?
-    compile 'commons-io:commons-io:2.4'
-    compile 'org.apache.commons:commons-lang3:3.0'
-    compile 'com.fasterxml.jackson.core:jackson-annotations:2.6.2'
-    compile 'com.fasterxml.jackson.core:jackson-core:2.6.7'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.6.7'
+    compile 'commons-io:commons-io:2.5'
+    compile 'org.apache.commons:commons-lang3:3.6'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.9'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.8.9'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.8.9'
 
 
     // impl
