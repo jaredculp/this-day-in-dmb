@@ -57,7 +57,7 @@ final class ShowSupplier {
                 .children()
                 .first();
 
-        final String venue = showEl.nextElementSibling().nextElementSibling().text().replace("[^A-Za-z0-9]", "");
+        final String venue = scrub(showEl.nextElementSibling().nextElementSibling().text());
         final String show = showEl.attr("href");
         final String showUrl = show.substring(2, show.length());
 
@@ -70,9 +70,13 @@ final class ShowSupplier {
                 .select("a.lightorange")
                 .stream()
                 .map(Element::text)
-                .map(s -> s.replace("[^A-Za-z0-9]", ""))
+                .map(ShowSupplier::scrub)
                 .collect(toList());
 
         return new Show(venue, show.substring(2, show.length()), setlist);
+    }
+
+    private static String scrub(String in) {
+        return in.replaceAll("[^A-Za-z0-9]", "");
     }
 }
