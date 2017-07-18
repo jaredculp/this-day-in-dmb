@@ -70,6 +70,7 @@ final class ShowSupplier {
                 .select("a.lightorange")
                 .stream()
                 .map(Element::text)
+                .map(s -> s.replace("[^A-Za-z0-9]", ""))
                 .collect(toList());
 
         return new Show(venue, show.substring(2, show.length()), setlist);
