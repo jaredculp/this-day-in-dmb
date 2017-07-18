@@ -12,13 +12,13 @@ import com.amazon.speech.speechlet.SpeechletResponse;
 import com.amazon.speech.ui.PlainTextOutputSpeech;
 import com.amazon.speech.ui.Reprompt;
 import com.amazon.speech.ui.SimpleCard;
+import com.amazon.speech.ui.SsmlOutputSpeech;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import retrofit2.Retrofit;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.List;
 
 /**
  * {@link Speechlet} which handles the lifecycle of the Alexa application.
@@ -105,8 +105,8 @@ final class ThisDayInDmbSpeechlet implements Speechlet {
     }
 
     private static SpeechletResponse tellResponse(String sayText, String cardTitle, String cardText) {
-        final PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-        speech.setText(sayText);
+        final SsmlOutputSpeech speech = new SsmlOutputSpeech();
+        speech.setSsml(sayText);
 
         final SimpleCard simpleCard = new SimpleCard();
         simpleCard.setTitle(cardTitle);
