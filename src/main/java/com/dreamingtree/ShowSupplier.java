@@ -77,6 +77,6 @@ final class ShowSupplier {
     }
 
     private static String scrub(String in) {
-        return in.replaceAll("[^A-Za-z0-9]", "");
+        return in.replaceAll("[^A-Za-z0-9, ]", "");
     }
 }
