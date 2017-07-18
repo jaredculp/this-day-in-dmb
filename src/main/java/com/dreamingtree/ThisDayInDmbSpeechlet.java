@@ -20,16 +20,25 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
-import static java.util.stream.Collectors.joining;
-
 /**
  * {@link Speechlet} which handles the lifecycle of the Alexa application.
  */
 final class ThisDayInDmbSpeechlet implements Speechlet {
 
     private static final Logger LOG = LoggerFactory.getLogger(ThisDayInDmbSpeechlet.class);
-    private static final String BASE_URL = "http://dmbalmanac.com";
 
+    private static final PlainTextOutputSpeech WELCOME_SPEECH = new PlainTextOutputSpeech();
+    private static final PlainTextOutputSpeech HELP_SPEECH = new PlainTextOutputSpeech();
+    private static final PlainTextOutputSpeech STOP_SPEECH = new PlainTextOutputSpeech();
+
+    static {
+        WELCOME_SPEECH.setText("Welcome to this day in d. m. b. history! Say setlist to hear a historical setlist!");
+        HELP_SPEECH.setText(
+                "I can tell you historical d. m. b. set lists. Say setlist to hear a historical setlist or stop to exit");
+        STOP_SPEECH.setText("O. K. stopping. Eat, drink, and be merry!");
+    }
+
+    private static final String BASE_URL = "http://dmbalmanac.com";
     private static final Almanac ALMANAC = new Retrofit.Builder()
             .baseUrl(BASE_URL)
             .build()
@@ -46,13 +55,10 @@ final class ThisDayInDmbSpeechlet implements Speechlet {
     public SpeechletResponse onLaunch(LaunchRequest request, Session session) throws SpeechletException {
         LOG.info("onLaunch requestId={}, sessionId={}", request.getRequestId(), session.getSessionId());
 
-        final PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-        speech.setText("Welcome to this day in DMB history! Say setlist to hear a historical setlist");
-
         final Reprompt reprompt = new Reprompt();
-        reprompt.setOutputSpeech(speech);
+        reprompt.setOutputSpeech(WELCOME_SPEECH);
 
-        return SpeechletResponse.newAskResponse(speech, reprompt);
+        return SpeechletResponse.newAskResponse(WELCOME_SPEECH, reprompt);
     }
 
     @Override
@@ -62,7 +68,6 @@ final class ThisDayInDmbSpeechlet implements Speechlet {
         final Intent intent = request.getIntent();
         final String intentName = (intent != null) ? intent.getName() : "AMAZON.StopIntent";
 
-        final PlainTextOutputSpeech speech;
         switch (intentName) {
             case "SetlistIntent":
                 final Show show;
@@ -72,25 +77,19 @@ final class ThisDayInDmbSpeechlet implements Speechlet {
                     throw new SpeechletException("Could not retrieve setlist");
                 }
 
-                final List<String> setlist = show.getSetlist();
+                final String speechText = withPauses(1, "On this day Dave Matthews Band played in",
+                        show.getVenue(),
+                        "where the set list was",
+                        String.join(", ", show.getSetlist()));
 
-                speech = new PlainTextOutputSpeech();
-                speech.setText("On this day Dave Matthews Band played in... " + show.getVenue() + " " +
-                        "The set list was... " +
-                        setlist.stream().collect(joining(", ")));
+                final String cardTitle = LocalDate.now() + show.getVenue();
+                final String cardContent = BASE_URL + "/" + show.getUrl() + "\n\n\n" + String.join("\n", show.getSetlist());
 
-                final SimpleCard simpleCard = new SimpleCard();
-                simpleCard.setTitle(LocalDate.now().toString() + show.getVenue());
-                final String content = BASE_URL + "/" + show.getUrl() + "\n\n\n" + setlist.stream().collect(joining("\n"));
-                simpleCard.setContent(content);
-
-                return SpeechletResponse.newTellResponse(speech, simpleCard);
+                return tellResponse(speechText, cardTitle, cardContent);
             case "AMAZON.HelpIntent":
+                return SpeechletResponse.newTellResponse(HELP_SPEECH);
             case "AMAZON.StopIntent":
-                speech = new PlainTextOutputSpeech();
-                speech.setText("Eat drink and be merry!");
-
-                return SpeechletResponse.newTellResponse(speech);
+                return SpeechletResponse.newTellResponse(STOP_SPEECH);
             default:
                 throw new SpeechletException("Invalid intent");
         }
@@ -99,5 +98,20 @@ final class ThisDayInDmbSpeechlet implements Speechlet {
     @Override
     public void onSessionEnded(SessionEndedRequest request, Session session) throws SpeechletException {
         LOG.info("onSessionEnded requestId={}, sessionId={}", request.getRequestId(), session.getSessionId());
+    }
+
+    private static String withPauses(int pauseSeconds, String... parts) {
+        return "<speak>" + String.join(" <break time=\"" + pauseSeconds + "s\"/> ", parts) + "</speak>";
+    }
+
+    private static SpeechletResponse tellResponse(String sayText, String cardTitle, String cardText) {
+        final PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
+        speech.setText(sayText);
+
+        final SimpleCard simpleCard = new SimpleCard();
+        simpleCard.setTitle(cardTitle);
+        simpleCard.setContent(cardText);
+
+        return SpeechletResponse.newTellResponse(speech, simpleCard);
     }
 }

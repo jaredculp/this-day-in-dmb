@@ -57,7 +57,7 @@ final class ShowSupplier {
                 .children()
                 .first();
 
-        final String venue = showEl.nextElementSibling().nextElementSibling().text();
+        final String venue = showEl.nextElementSibling().nextElementSibling().text().replace("[^A-Za-z0-9]", "");
         final String show = showEl.attr("href");
         final String showUrl = show.substring(2, show.length());
 
