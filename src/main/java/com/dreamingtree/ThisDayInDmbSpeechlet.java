@@ -29,12 +29,15 @@ final class ThisDayInDmbSpeechlet implements Speechlet {
 
     private static final PlainTextOutputSpeech WELCOME_SPEECH = new PlainTextOutputSpeech();
     private static final PlainTextOutputSpeech HELP_SPEECH = new PlainTextOutputSpeech();
+    private static final PlainTextOutputSpeech HELP_REPROMPT_SPEECH = new PlainTextOutputSpeech();
+    private static final Reprompt HELP_REPROMPT = new Reprompt();
     private static final PlainTextOutputSpeech STOP_SPEECH = new PlainTextOutputSpeech();
 
     static {
         WELCOME_SPEECH.setText("Welcome to this day in d. m. b. history! Say setlist to hear a historical setlist!");
-        HELP_SPEECH.setText(
-                "I can tell you historical d. m. b. set lists. Say setlist to hear a historical setlist or stop to exit");
+        HELP_SPEECH.setText("I can tell you historical d. m. b. set lists");
+        HELP_REPROMPT_SPEECH.setText("Say setlist to hear a historical setlist or stop to exit");
+        HELP_REPROMPT.setOutputSpeech(HELP_REPROMPT_SPEECH);
         STOP_SPEECH.setText("O. K. stopping. Eat, drink, and be merry!");
     }
 
@@ -87,7 +90,7 @@ final class ThisDayInDmbSpeechlet implements Speechlet {
 
                 return tellResponse(speechText, cardTitle, cardContent);
             case "AMAZON.HelpIntent":
-                return SpeechletResponse.newTellResponse(HELP_SPEECH);
+                return SpeechletResponse.newAskResponse(HELP_SPEECH, HELP_REPROMPT);
             case "AMAZON.StopIntent":
                 return SpeechletResponse.newTellResponse(STOP_SPEECH);
             default:
