@@ -92,6 +92,7 @@ final class ThisDayInDmbSpeechlet implements Speechlet {
             case "AMAZON.HelpIntent":
                 return SpeechletResponse.newAskResponse(HELP_SPEECH, HELP_REPROMPT);
             case "AMAZON.StopIntent":
+            case "AMAZON.CancelIntent":
                 return SpeechletResponse.newTellResponse(STOP_SPEECH);
             default:
                 throw new SpeechletException("Invalid intent");
