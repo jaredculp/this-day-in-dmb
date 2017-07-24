@@ -85,7 +85,7 @@ final class ThisDayInDmbSpeechlet implements Speechlet {
                         "where the set list was",
                         String.join(", ", show.getSetlist()));
 
-                final String cardTitle = LocalDate.now() + show.getVenue();
+                final String cardTitle = LocalDate.now() + " " + show.getVenue();
                 final String cardContent = BASE_URL + "/" + show.getUrl() + "\n\n\n" + String.join("\n", show.getSetlist());
 
                 return tellResponse(speechText, cardTitle, cardContent);
