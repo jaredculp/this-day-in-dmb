@@ -4,6 +4,15 @@
       "intent": "SetlistIntent"
     },
     {
+      "intent": "SongIntent",
+      "slots": [
+        {
+          "name": "SongName",
+          "type": "LIST_OF_SONGS"
+        }
+      ]
+    },
+    {
       "intent": "AMAZON.HelpIntent"
     },
     {

@@ -32,6 +32,7 @@ final class ThisDayInDmbSpeechlet implements Speechlet {
     private static final PlainTextOutputSpeech HELP_REPROMPT_SPEECH = new PlainTextOutputSpeech();
     private static final Reprompt HELP_REPROMPT = new Reprompt();
     private static final PlainTextOutputSpeech STOP_SPEECH = new PlainTextOutputSpeech();
+    private static final PlainTextOutputSpeech UNKNOWN_SONG_SPEECH = new PlainTextOutputSpeech();
 
     static {
         WELCOME_SPEECH.setText("Welcome to this day in d. m. b. history! Say setlist to hear a historical setlist!");
@@ -39,6 +40,7 @@ final class ThisDayInDmbSpeechlet implements Speechlet {
         HELP_REPROMPT_SPEECH.setText("Say setlist to hear a historical setlist or stop to exit");
         HELP_REPROMPT.setOutputSpeech(HELP_REPROMPT_SPEECH);
         STOP_SPEECH.setText("O. K. stopping. Eat, drink, and be merry!");
+        UNKNOWN_SONG_SPEECH.setText("Sorry, I don't know that song");
     }
 
     private static final String BASE_URL = "http://dmbalmanac.com";
@@ -48,6 +50,7 @@ final class ThisDayInDmbSpeechlet implements Speechlet {
             .create(Almanac.class);
 
     private static final ShowSupplier SHOW_SUPPLIER = new ShowSupplier(ALMANAC);
+    private static final SongSupplier SONG_SUPPLIER = new SongSupplier(ALMANAC);
 
     @Override
     public void onSessionStarted(SessionStartedRequest request, Session session) throws SpeechletException {
@@ -89,6 +92,18 @@ final class ThisDayInDmbSpeechlet implements Speechlet {
                 final String cardContent = BASE_URL + "/" + show.getUrl() + "\n\n\n" + String.join("\n", show.getSetlist());
 
                 return tellResponse(speechText, cardTitle, cardContent);
+            case "SongIntent":
+                final String songName = intent.getSlot("SongName").getValue();
+                final String lastPlayed;
+                try {
+                    lastPlayed = SONG_SUPPLIER.get(songName);
+                } catch (IOException e) {
+                    throw new SpeechletException("Could not find last played date for " + songName);
+                }
+
+                final PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
+                speech.setText(songName + " was last played on " + lastPlayed);
+                return SpeechletResponse.newTellResponse(speech);
             case "AMAZON.HelpIntent":
                 return SpeechletResponse.newAskResponse(HELP_SPEECH, HELP_REPROMPT);
             case "AMAZON.StopIntent":
