@@ -4,3 +4,7 @@ SetlistIntent tell me a d. m. b. setlist
 SetlistIntent tell me today's d. m. b. setlist
 SetlistIntent give me a d. m. b. setlist
 SetlistIntent give me today's d. m. b. setlist
+
+SongIntent when was the last time {SongName} was played
+SongIntent when was {SongName} last played
+SongIntent about {SongName}
