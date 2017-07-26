@@ -1,14 +1,19 @@
 package com.dreamingtree;
 
+import org.apache.commons.text.similarity.LevenshteinDistance;
+
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * A static list of songs available as of 2017-07-26. These are stored instead of retrieved to improve response times.
  *
- * TODO clean up trailing "The" songs and similar.
+ * A https://en.wikipedia.org/wiki/Levenshtein_distance is used for string comparison.
  */
-public final class Songs {
+final class Songs {
+
+    private static final LevenshteinDistance LEVENSHTEIN_DISTANCE = LevenshteinDistance.getDefaultInstance();
 
     private static final Map<String, Integer> SONG_IDS = new HashMap<>();
 
@@ -887,7 +892,12 @@ public final class Songs {
 
     private Songs() {}
 
-    public static Integer get(String name) {
-        return SONG_IDS.get(name);
+    static Integer get(String name) {
+        return SONG_IDS.entrySet()
+                .stream()
+                .sorted(Comparator.comparing(song -> LEVENSHTEIN_DISTANCE.apply(song.getKey(), name)))
+                .map(Map.Entry::getValue)
+                .findFirst()
+                .orElse(null);
     }
 }
